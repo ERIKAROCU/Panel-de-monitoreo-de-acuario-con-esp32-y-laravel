@@ -1,0 +1,16 @@
+<div>
+    {{-- ... tu dashboard de sensores ... --}}
+
+    <h3>Controles del Acuario</h3>
+    
+    <button wire:click="feedFish" class="btn-feed">
+        Alimentar Peces
+    </button>
+
+    @if (session()->has('message'))
+        <div class="alert-success">
+            {{ session('message') }}
+        </div>
+    @endif
+
+</div>
