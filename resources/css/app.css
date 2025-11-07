@@ -1,3 +1,54 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* =================================== */
+/* === NUEVO: SCROLLBAR MODERNO === */
+/* =================================== */
+
+/* --- Para Firefox --- */
+.custom-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #94a3b8 #f1f5f9; /* thumb track */
+}
+
+.dark .custom-scrollbar {
+    scrollbar-color: #64748b #334155; /* thumb track (dark) */
+}
+
+
+/* --- Para WebKit (Chrome, Safari, Edge) --- */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 8px; /* Ancho del scrollbar */
+    height: 8px; /* Altura (para scroll horizontal) */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9; /* Color de fondo (claro) */
+    border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #94a3b8; /* Color del scrollbar (claro) */
+    border-radius: 10px;
+    border: 2px solid #f1f5f9; /* Espacio entre el thumb y el track */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #475569; 
+}
+
+/* --- Modo Oscuro (WebKit) --- */
+.dark .custom-scrollbar::-webkit-scrollbar-track {
+    background: #334155; /* Color de fondo (oscuro) */
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #64748b; /* Color del scrollbar (oscuro) */
+    border: 2px solid #334155; /* Espacio entre el thumb y el track */
+}
+
+.dark .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+}

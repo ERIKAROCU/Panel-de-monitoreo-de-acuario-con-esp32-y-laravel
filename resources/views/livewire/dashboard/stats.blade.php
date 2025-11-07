@@ -1,7 +1,7 @@
 <div>
     {{-- 1. SECCIÓN DE TARJETAS DE ESTADO --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-        
+        <h3 class="text-lg text-center font-semibold mb-6 text-gray-900 dark:text-white">Dashboard</h3>
         <!-- Temp. Agua -->
         <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex items-center space-x-4">
             <div class="flex-shrink-0">
@@ -82,101 +82,4 @@
         </div>
     </div>
 
-    {{-- 2. SECCIÓN DE MINI GRÁFICOS --}}
-    <div x-data="{ 
-            chartData: @entangle('dashboardChartData'),
-            miniCharts: {} 
-         }"
-         x-init="
-            console.log('Alpine init run. Initial data:', chartData);
-            
-            drawMiniCharts(chartData, miniCharts); // Dibuja en la carga
-
-            $watch('chartData', (newData) => {
-                console.log('Chart data updated by poll. New data:', newData);
-                drawMiniCharts(newData, miniCharts); // Redibuja en el poll
-            });
-         ">
-        
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-64 flex flex-col">
-                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2 text-center">Temperaturas Actuales</h4>
-                <div class="flex-grow">
-                    <canvas id="miniChartTemps"></canvas>
-                </div>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-64 flex flex-col">
-                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2 text-center">Estado Luz Actual</h4>
-                <div class="flex-grow">
-                    <canvas id="miniChartLight"></canvas>
-                </div>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-64 flex flex-col">
-                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2 text-center">Humedad Actual</h4>
-                <div class="flex-grow">
-                    <canvas id="miniChartHumidity"></canvas>
-                </div>
-            </div>
-            <div class="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-md h-64 flex flex-col">
-                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-2 text-center">TDS Actual</h4>
-                <div class="flex-grow relative"> 
-                    <canvas id="miniChartTDS"></canvas>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    {{-- 3. SCRIPT PARA MINI GRÁFICOS (Ahora vive dentro de este componente) --}}
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Función para crear/actualizar gráfico de barras
-        function updateMiniBarChart(canvasId, label, labels, data, chartInstanceStore) {
-            const canvasElement = document.getElementById(canvasId);
-            if (!canvasElement) {
-                console.error(`Canvas element with ID ${canvasId} not found.`);
-                return;
-            }
-            const ctx = canvasElement.getContext('2d');
-            if (chartInstanceStore[canvasId]) {
-                chartInstanceStore[canvasId].destroy(); // Destruye el anterior
-            }
-            chartInstanceStore[canvasId] = new Chart(ctx, { // Guarda el nuevo
-                type: 'bar', data: { labels: labels, datasets: [{ label: label, data: data, backgroundColor: ['rgba(59, 130, 246, 0.6)', 'rgba(249, 115, 22, 0.6)'], borderColor: ['rgb(59, 130, 246)', 'rgb(249, 115, 22)'], borderWidth: 1 }] },
-                options: { indexAxis: 'y', scales: { x: { beginAtZero: true } }, plugins: { legend: { display: false } }, responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        // Función para crear/actualizar gráfico de dona/anillo
-        function updateMiniDoughnutChart(canvasId, labels, data, colors, chartInstanceStore, cutout = '50%') {
-            const canvasElement = document.getElementById(canvasId);
-                if (!canvasElement) {
-                console.error(`Canvas element with ID ${canvasId} not found.`);
-                return;
-            }
-            const ctx = canvasElement.getContext('2d');
-            if (chartInstanceStore[canvasId]) {
-                chartInstanceStore[canvasId].destroy(); // Destruye el anterior
-            }
-            chartInstanceStore[canvasId] = new Chart(ctx, { // Guarda el nuevo
-                type: 'doughnut', data: { labels: labels, datasets: [{ data: data, backgroundColor: colors.bg, borderColor: colors.border, borderWidth: 1 }] },
-                options: { cutout: cutout, plugins: { legend: { position: 'bottom' } }, responsive: true, maintainAspectRatio: false }
-            });
-        }
-
-        // Función "controladora" que llama Alpine
-        function drawMiniCharts(data, chartInstanceStore) {
-            if (!data) {
-                return;
-            }
-            
-            updateMiniBarChart('miniChartTemps', 'Temperaturas', data.labels, data.temperatures, chartInstanceStore);
-            updateMiniDoughnutChart('miniChartLight', ['Encendida', 'Apagada'], data.lightStatus, { bg: ['rgba(234, 179, 8, 0.6)', 'rgba(107, 114, 128, 0.6)'], border: ['rgb(234, 179, 8)', 'rgb(107, 114, 128)'] }, chartInstanceStore);
-            updateMiniDoughnutChart('miniChartHumidity', ['Humedad', ''], data.humidity, { bg: ['rgba(6, 182, 212, 0.6)', 'rgba(229, 231, 235, 0.6)'], border: ['rgb(6, 182, 212)', 'rgb(209, 213, 219)'] }, chartInstanceStore, '80%'); 
-
-            const maxTDS = 1000; 
-            const tdsPercentage = data.tdsValue <= maxTDS ? data.tdsValue : maxTDS;
-            const remainingTDS = maxTDS - tdsPercentage > 0 ? maxTDS - tdsPercentage : 0;
-            updateMiniDoughnutChart('miniChartTDS', ['TDS Actual', ''], [tdsPercentage, remainingTDS], { bg: ['rgba(34, 197, 94, 0.6)', 'rgba(229, 231, 235, 0.6)'], border: ['rgb(34, 197, 94)', 'rgb(209, 213, 219)'] }, chartInstanceStore, '80%');
-        }
-    </script>
 </div>
