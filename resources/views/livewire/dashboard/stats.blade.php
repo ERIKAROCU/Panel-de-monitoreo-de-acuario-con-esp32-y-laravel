@@ -1,7 +1,7 @@
 <div>
     {{-- 1. SECCIÓN DE TARJETAS DE ESTADO --}}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-        <h3 class="text-lg text-center font-semibold mb-6 text-gray-900 dark:text-white">Dashboard</h3>
+        {{-- <h3 class="text-lg text-center font-semibold mb-6 text-gray-900 dark:text-white">Dashboard</h3> --}}
         <!-- Temp. Agua -->
         <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex items-center space-x-4">
             <div class="flex-shrink-0">

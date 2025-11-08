@@ -8,11 +8,10 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    // --- ¡ESTA ES LA SOLUCIÓN! ---
-    // Le decimos a VITE que escuche y reporte
-    // ESTA IP específica.
+
+    // --- ¡AÑADE ESTE BLOQUE! ---
     server: {
-        host: '192.168.31.210', // <-- ¡TU IP DE RED AQUÍ!
-        port: 5173,
+        host: '0.0.0.0', // Esto fuerza a VITE a escuchar en todas las IPs
+        port: 5173,      // El puerto por defecto
     }
 });

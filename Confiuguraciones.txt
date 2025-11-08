@@ -1,7 +1,31 @@
-php artisan serve --host=0.0.0.0 --port=8000
+npm install & npm run dev                       --> primer terminal
+npm run dev -- --host
+php artisan serve --host=0.0.0.0 --port=8000    --> segundo terminal
+
+
+http://192.168.31.210:8000/dashboard            /---- celular
 
 php artisan make:livewire Control/ControlAcuario
 
 php artisan make:livewire Dashboard
 php artisan make:livewire Control/Graficos
 php artisan make:livewire Control/Historial
+
+-------------------------------------------------------
+Tu Nuevo Flujo de Trabajo (Cuando Cambies de Red)
+Ahora, cada vez que te conectes a una red WiFi nueva y tu IP cambie (ej. a 192.168.1.100), solo tendrás que hacer 3 cambios:
+
+Detener los servidores.
+
+Cambiar la IP en vite.config.js (en el bloque server.host).
+
+Cambiar la IP en .env (en APP_URL).
+
+Cambiar la IP en tu .ino (en serverPath).
+
+Ejecutar: php artisan config:clear.
+
+Reiniciar los servidores.
+npm install & npm run dev                       --> primer terminal
+php artisan serve --host=0.0.0.0 --port=8000    --> segundo terminal
+
