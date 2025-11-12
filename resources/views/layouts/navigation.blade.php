@@ -1,13 +1,4 @@
-<?php
-
-use App\Livewire\Actions\Logout;
-
-$logout = function (Logout $logout) {
-    $logout();
-    $this->redirect('/', navigate: true);
-};
-
-?>
+<!-- EL BLOQUE PHP DE ARRIBA FUE ELIMINADO -->
 
 <nav x-data="{ open: false }" class="bg-white dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
     <!-- Primary Navigation Menu -->
@@ -59,6 +50,37 @@ $logout = function (Logout $logout) {
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ms-6">
+
+                <!-- ================================== -->
+                <!-- 1. INTERRUPTOR DE TEMA (ESCRITORIO)  -->
+                <!-- ================================== -->
+                <button 
+                    type="button"
+                    x-data="{ 
+                        isDark: document.documentElement.classList.contains('dark'),
+                        toggle() {
+                            this.isDark = !this.isDark;
+                            document.documentElement.classList.toggle('dark', this.isDark);
+                            localStorage.theme = this.isDark ? 'dark' : 'light';
+                        }
+                    }"
+                    @click="toggle()"
+                    class="me-4 p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    aria-label="Toggle dark mode"
+                >
+                    <!-- Icono de Sol (se muestra si NO es dark) -->
+                    <svg x-show="!isDark" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <!-- Icono de Luna (se muestra si SÍ es dark) -->
+                    <svg x-show="isDark" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                </button>
+                <!-- ================================== -->
+                <!-- FIN INTERRUPTOR (ESCRITORIO)       -->
+                <!-- ================================== -->
+
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150">
@@ -78,11 +100,16 @@ $logout = function (Logout $logout) {
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link>
+                        <!-- +++ ESTE ES EL ARREGLO PARA ESCRITORIO +++ -->
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <x-dropdown-link :href="route('logout')"
+                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
                                 {{ __('Log Out') }}
                             </x-dropdown-link>
-                        </button>
+                        </form>
+                        <!-- +++ FIN DEL ARREGLO +++ -->
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -137,6 +164,42 @@ $logout = function (Logout $logout) {
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200 dark:border-gray-600">
+
+            <!-- ================================== -->
+            <!-- 2. INTERRUPTOR DE TEMA (MÓVIL)       -->
+            <!-- ================================== -->
+            <div class="px-4 pb-2">
+                <button 
+                    type="button"
+                    x-data="{ 
+                        isDark: document.documentElement.classList.contains('dark'),
+                        toggle() {
+                            this.isDark = !this.isDark;
+                            document.documentElement.classList.toggle('dark', this.isDark);
+                            localStorage.theme = this.isDark ? 'dark' : 'light';
+                        }
+                    }"
+                    @click="toggle()"
+                    class="w-full flex items-center justify-start p-2 rounded-md text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none"
+                    aria-label="Toggle dark mode"
+                >
+                    <!-- Icono de Sol (se muestra si NO es dark) -->
+                    <svg x-show="!isDark" class="h-6 w-6 me-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <!-- Icono de Luna (se muestra si SÍ es dark) -->
+                    <svg x-show="isDark" class="h-6 w-6 me-2" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                    </svg>
+                    <!-- Añadimos texto para el menú móvil -->
+                    <span x-show="!isDark" class="text-sm font-medium">Cambiar a modo oscuro</span>
+                    <span x-show="isDark" class="text-sm font-medium">Cambiar a modo claro</span>
+                </button>
+            </div>
+            <!-- ================================== -->
+            <!-- FIN INTERRUPTOR (MÓVIL)            -->
+            <!-- ================================== -->
+
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800 dark:text-gray-200" x-data="{{ json_encode(['name' => auth()->user()->name]) }}" x-text="name" x-on:profile-updated.window="name = $event.detail.name"></div>
                 <div class="font-medium text-sm text-gray-500">{{ auth()->user()->email }}</div>
@@ -148,13 +211,17 @@ $logout = function (Logout $logout) {
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
-                <button wire:click="logout" class="w-full text-start">
-                    <x-responsive-nav-link>
+                <!-- +++ ESTE ES EL ARREGLO PARA MÓVIL (LIMPIADO) +++ -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <x-responsive-nav-link :href="route('logout')"
+                            onclick="event.preventDefault();
+                                        this.closest('form').submit();">
                         {{ __('Log Out') }}
                     </x-responsive-nav-link>
-                </button>
+                </form>
+                <!-- +++ FIN DEL ARREGLO +++ -->
             </div>
         </div>
     </div>
 </nav>
-

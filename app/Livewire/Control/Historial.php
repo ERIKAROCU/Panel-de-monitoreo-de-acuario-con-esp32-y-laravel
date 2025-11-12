@@ -6,6 +6,11 @@ use Livewire\Component;
 use App\Models\Prueba;
 use Livewire\WithPagination;
 
+// --- AÑADIR ESTAS DOS LÍNEAS ---
+use App\Exports\HistorialExport;
+use Maatwebsite\Excel\Facades\Excel;
+// --- FIN ---
+
 class Historial extends Component
 {
     use WithPagination;
@@ -16,8 +21,8 @@ class Historial extends Component
     public $filtroLuz = ''; // '' significa "Todos"
 
     /**
-     * Resetea la paginación si cambia un filtro
-     */
+    * Resetea la paginación si cambia un filtro
+    */
     public function updating($property)
     {
         if (in_array($property, ['filtroFechaDesde', 'filtroFechaHasta', 'filtroLuz'])) {
@@ -52,4 +57,22 @@ class Historial extends Component
             'historial' => $historial,
         ]);
     }
+
+    // --- AÑADIR ESTE NUEVO MÉTODO ---
+    public function exportarExcel()
+    {
+        $fileName = 'historial_sensores_' . now()->format('Y-m-d_His') . '.xlsx';
+
+        // Pasamos los filtros actuales al constructor del Export
+        // Laravel Excel se encargará de la descarga
+        return Excel::download(
+            new HistorialExport(
+                $this->filtroFechaDesde, 
+                $this->filtroFechaHasta, 
+                $this->filtroLuz
+            ), 
+            $fileName
+        );
+    }
+    // --- FIN ---
 }

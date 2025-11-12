@@ -4,6 +4,8 @@ php artisan serve --host=0.0.0.0 --port=8000    --> segundo terminal
 
 
 http://192.168.31.210:8000/dashboard            /---- celular
+http://192.168.43.172:8000/dashboard            /---- celular
+192.168.43.172
 
 php artisan make:livewire Control/ControlAcuario
 
@@ -29,3 +31,7 @@ Reiniciar los servidores.
 npm install & npm run dev                       --> primer terminal
 php artisan serve --host=0.0.0.0 --port=8000    --> segundo terminal
 
+---------------------------------------------------
+
+paquete para descargar en excel
+composer require maatwebsite/excel
