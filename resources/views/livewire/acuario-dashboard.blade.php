@@ -1,5 +1,5 @@
 {{-- El polling ahora se define aquí y energiza a todos los hijos --}}
-<div class="bg-gray-100 dark:bg-gray-900 py-12" wire:poll.5s>
+<div class="bg-gray-100 dark:bg-gray-900 py-12" >
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
         {{-- 1. Verificamos si hay datos --}}
@@ -17,7 +17,7 @@
             
             @elseif ($activeTab == 'charts')
                 {{-- Este componente se carga 'lazy' para no consultar la BD innecesariamente --}}
-                <livewire:control.graficos wire:key="control-graficos" lazy />
+                <livewire:control.graficos wire:key="control-graficos" />
 
             @elseif ($activeTab == 'historial')
                 <livewire:control.historial wire:key="control-historial" lazy />

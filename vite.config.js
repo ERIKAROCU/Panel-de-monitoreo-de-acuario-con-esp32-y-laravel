@@ -13,7 +13,7 @@ export default defineConfig({
     // ESTA IP específica.
     server: {
         // host: '192.168.31.210', // <-- ¡TU IP DE RED AQUÍ!
-        host: '192.168.61.63',
+        host: '192.168.31.210',
         port: 5173,
     }
 });

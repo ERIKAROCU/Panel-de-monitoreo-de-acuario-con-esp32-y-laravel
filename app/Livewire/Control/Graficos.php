@@ -13,11 +13,7 @@ class Graficos extends Component
     public $filtroLuz = ''; // '' significa "Todos"
 
     // Este método se llama cuando el componente 'lazy' se carga
-    public function placeholder()
-    {
-        // Muestra un esqueleto de carga
-        return view('livewire.placeholders.graficos-skeleton');
-    }
+   
 
     public function render()
     {

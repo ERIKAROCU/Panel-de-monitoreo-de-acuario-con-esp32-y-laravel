@@ -1,85 +1,433 @@
-<div>
-    {{-- 1. SECCIÓN DE TARJETAS DE ESTADO --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-        {{-- <h3 class="text-lg text-center font-semibold mb-6 text-gray-900 dark:text-white">Dashboard</h3> --}}
-        <!-- Temp. Agua -->
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex items-center space-x-4">
-            <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-900">
-                    <svg class="h-6 w-6 text-blue-600 dark:text-blue-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.06c0-1.336-1.078-2.414-2.414-2.414S8.672 2.724 8.672 4.06v9.654a4.5 4.5 0 104.828 0V4.06zM12 14.25a2.25 2.25 0 100 4.5 2.25 2.25 0 000-4.5z" />
-                    </svg>
+<div wire:poll.5s
+    x-data="{}" 
+    x-init="drawStatCharts({{ json_encode($lectura) }})"
+    @actualizar-graficos.window="drawStatCharts($event.detail.lectura)"
+>
+
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex flex-col items-center">
+        <h2 class="text-md font-semibold text-gray-800 dark:text-gray-200">Dashboard</h2>
+    </div>
+    
+    {{-- =============== NUEVA FILA DE GRÁFICOS INTERPRETATIVOS =============== --}}
+    <div wire:ignore class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-10 mb-6">
+        
+        {{-- Temperatura Agua --}}
+        <div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center">
+                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-3">Temp. Agua</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="statChartTempAgua"></canvas>
+                    <div id="textChartTempAgua" 
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                                text-2xl font-bold text-gray-800 dark:text-gray-200"></div>
                 </div>
             </div>
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Temp. Agua</h3>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ number_format($lectura->temp_agua, 1) }} °C</p>
+            <br>
+            {{-- 🔹 LEYENDA ACTUALIZADA --}}
+            <div id="leyendaTempAgua" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center justify-center min-h-[140px] text-center">
+                </div>
+        </div>
+        
+        {{-- Temperatura Ambiente --}}
+        <div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center">
+                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-3">Temp. Ambiente</h4>
+                <div class="w-full h-48 relative">
+                    <canvas id="statChartTempAmb"></canvas>
+                    <div id="textChartTempAmb" 
+                        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 
+                                text-2xl font-bold text-gray-800 dark:text-gray-200"></div>
+                </div>
             </div>
+            <br>
+            {{-- 🔹 LEYENDA ACTUALIZADA --}}
+            <div id="leyendaTempAmb" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center justify-center min-h-[140px] text-center">
+                </div>
         </div>
 
-        <!-- Temp. Ambiente -->
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex items-center space-x-4">
-            <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-orange-100 dark:bg-orange-900">
-                    <svg class="h-6 w-6 text-orange-600 dark:text-orange-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-6.364-.386l1.591-1.591M3 12h2.25m.386-6.364l1.591 1.591M12 12a2.25 2.25 0 00-2.25 2.25v.01c0 1.12 1.112 2.006 2.45 2.006s2.45-.886 2.45-2.006v-.01A2.25 2.25 0 0012 12z" />
-                    </svg>
+        {{-- Humedad --}}
+        <div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center">
+                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-3">Humedad</h4>
+                <div class="w-full h-48 relative flex items-center justify-center">
+                    <canvas id="statChartHumedad"></canvas>
+                    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center space-y-1">
+                        <div id="textChartHumedad" 
+                            class="text-2xl font-bold text-gray-800 dark:text-gray-200"></div>
+                    </div>
                 </div>
             </div>
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Temp. Ambiente</h3>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ number_format($lectura->temp_ambiente, 1) }} °C</p>
+            <br>
+            {{-- 🔹 LEYENDA ACTUALIZADA --}}
+            <div id="leyendaHumedad" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center justify-center min-h-[140px] text-center">
+                </div>
+        </div>
+        
+        {{-- TDS --}}
+        <div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center justify-center">
+                {{-- 🔹 CAMBIO: Título actualizado --}}
+                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-3">TDS (Agua Fuente)</h4>
+
+                {{-- 🔹 CAMBIO: Altura unificada a h-48 y w-full --}}
+                <div class="relative w-full h-48 flex items-center justify-center"> 
+                    <canvas id="statChartTDS" class="w-full h-full"></canvas>
+                    <div id="textChartTDS" 
+                        class="absolute top-1/2 left-1/2 
+                                -translate-x-1/2 -translate-y-1/2
+                                text-3xl font-bold text-gray-800 dark:text-gray-200"></div>
+                </div>
             </div>
+            <br>
+            <div id="leyendaTDS" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center justify-center min-h-[140px] text-center">
+                </div>
         </div>
 
-        <!-- Humedad -->
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex items-center space-x-4">
-            <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-cyan-100 dark:bg-cyan-900">
-                    <svg class="h-6 w-6 text-cyan-600 dark:text-cyan-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M17.982 18.725A7.488 7.488 0 0012 15.75a7.488 7.488 0 00-5.982 2.975m11.963 0a9 9 0 10-11.963 0m11.963 0A8.966 8.966 0 0112 21a8.966 8.966 0 01-5.982-2.275M15 9.75a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                </div>
-            </div>
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Humedad</h3>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ number_format($lectura->humedad, 1) }} %</p>
-            </div>
-        </div>
+        {{-- Luz --}}
+        <div>
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center">
+                <h4 class="text-md font-semibold text-gray-800 dark:text-gray-200 mb-3">Nivel de Luz</h4>
 
-        <!-- TDS -->
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex items-center space-x-4">
-            <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-green-100 dark:bg-green-900">
-                    <svg class="h-6 w-6 text-green-600 dark:text-green-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008a.75.75 0 01.75-.75zM12 9a.75.75 0 00-.75.75v5.25a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75V9.75a.75.75 0 00-.75-.75H12z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5M3.75 17.25h16.5" />
+                {{-- 🔹 CAMBIO: Altura unificada a h-48 y w-full (removido w-32 h-32) --}}
+                <div id="textChartLuz"
+                    class="relative flex flex-col items-center justify-center w-full h-48">
+                    <svg id="iconLuz" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke-width="2.5"
+                        class="w-16 h-16 transition-all duration-700 ease-in-out">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 2a7 7 0 00-4 12v2a1 1 0 001 1h6a1 1 0 001-1v-2a7 7 0 00-4-12z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M9 21h6" />
                     </svg>
+                    <p id="estadoLuz" class="mt-2 text-sm font-semibold text-gray-600 dark:text-gray-300"></p>
                 </div>
             </div>
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">TDS (Calidad)</h3>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ $lectura->tds }}</p>
-            </div>
-        </div>
-
-        <!-- Nivel de Luz -->
-        <div class="bg-white dark:bg-gray-800 p-5 rounded-lg shadow-md flex items-center space-x-4">
-            <div class="flex-shrink-0">
-                <div class="flex items-center justify-center h-12 w-12 rounded-full bg-yellow-100 dark:bg-yellow-900">
-                    <svg class="h-6 w-6 text-yellow-600 dark:text-yellow-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18v.01M12 6v.01M6 12h.01M18 12h.01M8.025 8.025l.01.01M15.965 15.965l.01.01M8.025 15.965l.01-.01M15.965 8.025l.01-.01" />
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 21a5.25 5.25 0 005.25-5.25H5.25A5.25 5.25 0 0010.5 21zM10.5 3c2.9 0 5.25 2.35 5.25 5.25h-10.5C5.25 5.35 7.6 3 10.5 3z" />
-                    </svg>
+            <br>
+            <div id="leyendaLuz" class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 flex flex-col items-center justify-center min-h-[140px] text-center">
                 </div>
-            </div>
-            <div>
-                <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">Nivel de Luz</h3>
-                <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">
-                    {{ $lectura->luz == 1 ? 'Encendida' : 'Apagada' }}
-                </p>
-            </div>
         </div>
     </div>
-
 </div>
+
+{{-- =============== SCRIPTS =============== --}}
+<script src="https://unpkg.com/lucide@latest"></script>
+<script>lucide.createIcons();</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    let statCharts = {};
+
+    // --- PLUGIN: AGUJA DEL GAUGE (CON ETIQUETAS 0% Y 100%) ---
+    // (Este plugin tuyo está bien, lo dejamos como estaba)
+    const gaugeNeedle = {
+    id: 'gaugeNeedle',
+    afterDraw(chart, args, pluginOptions) {
+        if (!pluginOptions.enable) return;
+
+        const { ctx } = chart;
+        const dataset = chart.data.datasets[0];
+        const value = dataset.data[0];
+        const max = pluginOptions.max || 5000; 
+
+        const meta = chart.getDatasetMeta(0);
+        if (!meta || !meta.data || !meta.data[0]) return;
+
+        const centerX = meta.data[0].x;
+        const centerY = meta.data[0].y;
+        const outerRadius = meta.data[0].outerRadius;
+        const innerRadius = meta.data[0].innerRadius;
+        const needleRadius = (innerRadius + outerRadius) / 2;
+
+        const angle = Math.PI * (1 + (value / max));
+
+        const needleX = centerX + needleRadius * Math.cos(angle);
+        const needleY = centerY + needleRadius * Math.sin(angle);
+
+        const needleColor = document.documentElement.classList.contains('dark') 
+            ? 'rgb(167, 139, 250)' 
+            : 'rgb(139, 92, 246)';
+
+        ctx.save();
+
+        // Aguja
+        ctx.beginPath();
+        ctx.strokeStyle = needleColor;
+        ctx.lineWidth = 3;
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(needleX, needleY);
+        ctx.stroke();
+
+        // Centro
+        ctx.beginPath();
+        ctx.fillStyle = needleColor;
+        ctx.arc(centerX, centerY, 6, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // Etiquetas de 0 y max
+        ctx.fillStyle = document.documentElement.classList.contains('dark') ? '#9ca3af' : '#6b7280';
+        ctx.font = '12px sans-serif';
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'left';
+        ctx.fillText('0', centerX - outerRadius + 5, centerY - 5);
+        ctx.textAlign = 'right';
+        ctx.fillText(max, centerX + outerRadius - 5, centerY - 5);
+
+        ctx.restore();
+    }
+    };
+    Chart.register(gaugeNeedle);
+    // ------------------------------------
+
+    
+    /**
+     * 🔹 (HELPER) Función interna para crear/actualizar gráficos
+     */
+    function _createChart(canvasId, config) {
+        const canvasElement = document.getElementById(canvasId);
+        if (!canvasElement) return;
+        const ctx = canvasElement.getContext('2d');
+        
+        if (statCharts[canvasId]) {
+            statCharts[canvasId].destroy();
+        }
+        statCharts[canvasId] = new Chart(ctx, config);
+    }
+
+
+    /**
+     * FUNCIÓN 1: GRÁFICO DE ANILLO (Para Temp y Humedad)
+     */
+    function updateDonutChart(canvasId, textId, label, value, max, color, unit) {
+        if (value > max) { value = max; }
+        if (value < 0) { value = 0; }
+        
+        const textElement = document.getElementById(textId);
+        if(textElement) {
+            let displayValue = (unit === '%') ? value.toFixed(0) : value.toFixed(1);
+            textElement.innerText = displayValue + unit;
+        }
+
+        const data = {
+            labels: [label, 'Restante'],
+            datasets: [{
+                data: [value, Math.max(0, max - value)],
+                backgroundColor: [ color, document.documentElement.classList.contains('dark') ? '#374151' : '#f3f4f6' ],
+                borderWidth: 0,
+                circumference: 270,
+                rotation: 225,
+            }]
+        };
+        
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%',
+                plugins: { legend: { display: false }, tooltip: { enabled: false } }
+            }
+        };
+        
+        _createChart(canvasId, config);
+    }
+
+    /**
+     * FUNCIÓN 2: GRÁFICO DE GAUGE (Para TDS)
+     */
+    function updateGaugeChart(canvasId, textId, label, value, max = 5000, color) {
+        if (value > max) { value = max; }
+        if (value < 0) { value = 0; }
+
+        const textElement = document.getElementById(textId);
+        if (textElement) {
+            textElement.innerText = value.toFixed(0);
+        }
+
+        const data = { 
+            labels: [label, 'Restante'],
+            datasets: [{
+                data: [value, Math.max(0, max - value)],
+                backgroundColor: [
+                    color,
+                    document.documentElement.classList.contains('dark') ? '#374151' : '#f3f4f6'
+                ],
+                borderWidth: 0,
+                circumference: 180,
+                rotation: 270
+            }]
+        };
+
+        const config = {
+            type: 'doughnut',
+            data: data,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                cutout: '80%',
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: false },
+                    gaugeNeedle: { enable: true, max: max } // Pasa el max al plugin
+                }
+            }
+        };
+
+        _createChart(canvasId, config);
+    }
+
+    /**
+     * FUNCIÓN 3: FOCO DINÁMICO (Luz Encendida/Apagada)
+     */
+    function updateFocoLuz(luzValue) {
+        const icon = document.getElementById('iconLuz');
+        const estado = document.getElementById('estadoLuz');
+        if (!icon || !estado) return;
+
+        if (luzValue === 1) {
+            // 💡 Encendido
+            icon.style.stroke = '#facc15'; // Amarillo brillante
+            icon.style.filter = 'drop-shadow(0 0 12px #facc15)';
+            icon.style.opacity = '1';
+            estado.textContent = 'Encendida';
+            estado.style.color = '#facc15';
+        } else {
+            // ⚫ Apagado
+            icon.style.stroke = '#9ca3af'; // Gris
+            icon.style.filter = 'none';
+            icon.style.opacity = '0.4';
+            estado.textContent = 'Apagada';
+            estado.style.color = '#9ca3af';
+        }
+    }
+
+
+    /**
+     * 🔹 (NUEVO) FUNCIÓN 4: ACTUALIZA LAS LEYENDAS INTERPRETATIVAS
+     */
+    function updateLeyendas(lectura) {
+        // --- 1. Leyenda Temp. Agua (para pecera tropical) ---
+        const elTempAgua = document.getElementById('leyendaTempAgua');
+        let estadoTempAgua = {};
+        if (lectura.temp_agua < 23) {
+            estadoTempAgua = { estado: 'Fría', color: 'text-blue-400', icono: 'thermometer-snowflake' };
+        } else if (lectura.temp_agua <= 28) {
+            estadoTempAgua = { estado: 'Óptima', color: 'text-green-400', icono: 'thermometer' };
+        } else {
+            estadoTempAgua = { estado: 'Caliente', color: 'text-red-400', icono: 'thermometer-sun' };
+        }
+        elTempAgua.innerHTML = `
+            <i data-lucide="${estadoTempAgua.icono}" class="w-10 h-10 ${estadoTempAgua.color} mb-2"></i>
+            <span class="font-semibold ${estadoTempAgua.color}">${estadoTempAgua.estado}</span>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Rango ideal: 23-28°C</p>
+        `;
+
+        // --- 2. Leyenda Temp. Ambiente ---
+        const elTempAmb = document.getElementById('leyendaTempAmb');
+        let estadoTempAmb = {};
+        if (lectura.temp_ambiente < 18) {
+            estadoTempAmb = { estado: 'Frío', color: 'text-blue-400', icono: 'thermometer-snowflake' };
+        } else if (lectura.temp_ambiente <= 26) {
+            estadoTempAmb = { estado: 'Templado', color: 'text-green-400', icono: 'thermometer' };
+        } else {
+            estadoTempAmb = { estado: 'Caluroso', color: 'text-red-400', icono: 'thermometer-sun' };
+        }
+        elTempAmb.innerHTML = `
+            <i data-lucide="${estadoTempAmb.icono}" class="w-10 h-10 ${estadoTempAmb.color} mb-2"></i>
+            <span class="font-semibold ${estadoTempAmb.color}">${estadoTempAmb.estado}</span>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Confort: 18-26°C</p>
+        `;
+
+        // --- 3. Leyenda Humedad Ambiente ---
+        const elHumedad = document.getElementById('leyendaHumedad');
+        let estadoHumedad = {};
+        if (lectura.humedad < 30) {
+            estadoHumedad = { estado: 'Seco', color: 'text-yellow-500', icono: 'wind' };
+        } else if (lectura.humedad <= 60) {
+            estadoHumedad = { estado: 'Confortable', color: 'text-green-400', icono: 'droplets' };
+        } else {
+            estadoHumedad = { estado: 'Húmedo', color: 'text-blue-400', icono: 'cloud-drizzle' };
+        }
+        elHumedad.innerHTML = `
+            <i data-lucide="${estadoHumedad.icono}" class="w-10 h-10 ${estadoHumedad.color} mb-2"></i>
+            <span class="font-semibold ${estadoHumedad.color}">${estadoHumedad.estado}</span>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Confort: 30-60%</p>
+        `;
+
+        // --- 4. Leyenda TDS (Agua dulce) ---
+        const elTDS = document.getElementById('leyendaTDS');
+        let estadoTDS = {};
+        if (lectura.tds < 100) {
+            estadoTDS = { estado: 'Muy Baja', color: 'text-cyan-400', icono: 'filter-x' };
+        } else if (lectura.tds <= 600) {
+            estadoTDS = { estado: 'Ideal', color: 'text-green-400', icono: 'check-circle' };
+        } else if (lectura.tds <= 1000) {
+            estadoTDS = { estado: 'Alta', color: 'text-yellow-500', icono: 'alert-triangle' };
+        } else {
+            estadoTDS = { estado: 'Peligrosa', color: 'text-red-400', icono: 'skull' };
+        }
+        elTDS.innerHTML = `
+            <i data-lucide="${estadoTDS.icono}" class="w-10 h-10 ${estadoTDS.color} mb-2"></i>
+            <span class="font-semibold ${estadoTDS.color}">${estadoTDS.estado} (ppm)</span>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Ideal (agua dulce): 100-400</p>
+        `;
+
+        // --- 5. Leyenda Luz ---
+        const elLuz = document.getElementById('leyendaLuz');
+        let estadoLuz = {};
+        if (lectura.luz === 1) {
+            estadoLuz = { estado: 'Iluminación Activa', color: 'text-yellow-400', icono: 'sun' };
+        } else {
+            estadoLuz = { estado: 'Ciclo de Descanso', color: 'text-gray-400', icono: 'moon' };
+        }
+        elLuz.innerHTML = `
+            <i data-lucide="${estadoLuz.icono}" class="w-10 h-10 ${estadoLuz.color} mb-2"></i>
+            <span class="font-semibold ${estadoLuz.color}">${estadoLuz.estado}</span>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">${(lectura.luz === 1 ? "Día" : "Noche")}</p>
+        `;
+
+        // 🔹 ¡Importante! Renderiza los nuevos iconos de Lucide
+        lucide.createIcons();
+    }
+
+
+    /**
+     * FUNCIÓN "CONTROLADORA": Dibuja/Actualiza todos los gráficos
+     */
+    function drawStatCharts(lectura) {
+        if (!lectura) return;
+
+        // Usamos setTimeout para asegurar que Alpine haya procesado los cambios del DOM
+        setTimeout(() => {
+            let tempMax = 40;
+            let humMax = 100;
+            let tdsMax = 1800; // Ajustado a un máximo más realista (5000 es mucho)
+
+            // --- Actualiza los Gráficos ---
+            updateDonutChart('statChartTempAgua', 'textChartTempAgua', 'Temp. Agua', lectura.temp_agua, tempMax, 'rgb(59, 130, 246)', '°C');
+            updateDonutChart('statChartTempAmb', 'textChartTempAmb', 'Temp. Amb.', lectura.temp_ambiente, tempMax, 'rgb(249, 115, 22)', '°C');
+            
+            // 🔹 ¡CAMBIO! Usamos updateDonutChart para la humedad
+            updateDonutChart('statChartHumedad', 'textChartHumedad', 'Humedad', lectura.humedad, humMax, 'rgb(6, 182, 212)', '%');
+            
+            updateGaugeChart('statChartTDS', 'textChartTDS', 'TDS', lectura.tds, tdsMax, 'rgb(34, 197, 94)');
+            updateFocoLuz(lectura.luz);
+            
+            // --- 🔹 (NUEVO) Actualiza las Leyendas ---
+            updateLeyendas(lectura);
+
+        }, 10);
+    }
+
+    // Limpieza de gráficos (sin cambios, esto está bien)
+    document.addEventListener('alpine:navigated', () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const currentTab = urlParams.get('tab') || 'dashboard'; 
+        if (currentTab !== 'dashboard') {
+            Object.values(statCharts).forEach(chart => {
+                if (chart) chart.destroy();
+            });
+            statCharts = {};
+        }
+    });
+</script>
