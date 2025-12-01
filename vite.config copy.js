@@ -9,9 +9,16 @@ export default defineConfig({
         }),
     ],
 
-    // --- ¡AÑADE ESTE BLOQUE! ---
+    /* server: {
+        host: '172.20.125.59',
+        port: 5173,
+    } */
+
     server: {
-        host: '0.0.0.0', // Esto fuerza a VITE a escuchar en todas las IPs
-        port: 5173,      // El puerto por defecto
+        host: '0.0.0.0', // <--- CAMBIA ESTO (Es más seguro y flexible)
+        port: 5173,
+        hmr: {
+            host: '172.20.125.59' // <--- AQUÍ SÍ pon tu IP fija para que el celular sepa dónde buscar los estilos
+        }
     }
 });

@@ -8,12 +8,17 @@ export default defineConfig({
             refresh: true,
         }),
     ],
-    // --- ¡ESTA ES LA SOLUCIÓN! ---
-    // Le decimos a VITE que escuche y reporte
-    // ESTA IP específica.
-    server: {
-        // host: '192.168.31.210', // <-- ¡TU IP DE RED AQUÍ!
-        host: '192.168.31.210',
+
+    /* server: {
+        host: '172.20.125.59',
         port: 5173,
+    } */
+
+    server: {
+        host: '0.0.0.0', // <--- CAMBIA ESTO (Es más seguro y flexible)
+        port: 5173,
+        hmr: {
+            host: '192.168.31.210' // <--- AQUÍ SÍ pon tu IP fija para que el celular sepa dónde buscar los estilos
+        }
     }
 });

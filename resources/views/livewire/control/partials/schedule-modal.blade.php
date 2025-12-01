@@ -5,7 +5,7 @@
 <div 
     x-data="{ show: $wire.entangle('showScheduleModal') }"
     x-show="show"
-    x-on:keydown.escape.window="show = false"
+    x-on:keydown.escape.window="show = fals.e"
     x-transition:enter="ease-out duration-300"
     x-transition:enter-start="opacity-0"
     x-transition:enter-end="opacity-100"

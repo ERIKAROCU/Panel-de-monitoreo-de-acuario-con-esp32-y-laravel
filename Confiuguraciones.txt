@@ -4,7 +4,7 @@ php artisan serve --host=0.0.0.0 --port=8000    --> segundo terminal
 
 
 http://192.168.31.210:8000/dashboard            /---- celular
-http://192.168.43.172:8000/dashboard            /---- celular
+http://192.168.60.219:8000/dashboard            /---- celular
 192.168.43.172
 
 php artisan make:livewire Control/ControlAcuario
@@ -12,6 +12,8 @@ php artisan make:livewire Control/ControlAcuario
 php artisan make:livewire Dashboard
 php artisan make:livewire Control/Graficos
 php artisan make:livewire Control/Historial
+
+app/livewire/Prediccion/
 
 -------------------------------------------------------
 Tu Nuevo Flujo de Trabajo (Cuando Cambies de Red)
@@ -35,3 +37,13 @@ php artisan serve --host=0.0.0.0 --port=8000    --> segundo terminal
 
 paquete para descargar en excel
 composer require maatwebsite/excel
+
+
+
+
+
+
+
+
+para python
+"C:\Users\Erik\AppData\Local\Programs\Python\Python39\python.exe" -m pip install joblib pandas scikit-learn numpy

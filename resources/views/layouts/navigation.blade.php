@@ -45,6 +45,13 @@
                         wire:navigate>
                         {{ __('Control') }}
                     </x-nav-link>
+
+                    <x-nav-link 
+                        :href="route('prediccion')" 
+                        :active="request()->routeIs('prediccion')" 
+                        wire:navigate>
+                        {{ __('Predicción IA') }}
+                    </x-nav-link>
                 </div>
             </div>
 
@@ -159,6 +166,13 @@
                 :active="request()->query('tab') == 'control'" 
                 wire:navigate>
                 {{ __('Control') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link 
+                :href="route('prediccion')" 
+                :active="request()->routeIs('prediccion')" 
+                wire:navigate>
+                {{ __('Predicción IA') }}
             </x-responsive-nav-link>
         </div>
 
