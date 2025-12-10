@@ -369,7 +369,7 @@
         elTDS.innerHTML = `
             <i data-lucide="${estadoTDS.icono}" class="w-10 h-10 ${estadoTDS.color} mb-2"></i>
             <span class="font-semibold ${estadoTDS.color}">${estadoTDS.estado} (ppm)</span>
-            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Ideal (agua dulce): 100-400</p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Ideal : 600-1000</p>
         `;
 
         // --- 5. Leyenda Luz ---

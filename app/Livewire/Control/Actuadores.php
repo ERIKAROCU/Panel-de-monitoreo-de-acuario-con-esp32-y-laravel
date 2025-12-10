@@ -22,20 +22,35 @@ class Actuadores extends Component
     public $newScheduleDays = [];
     #[Rule('required|boolean')]
     public $newScheduleIsActive = true;
-
     public $schedules;
-
     public $showHistoryModal = false;
     public $logFilter = 'all';
-
     public $angleOpen = 65;
     public $angleClose = 0;
     public $showConfigModal = false;
+    public $luzEncendida = false;
 
     public function mount()
     {
         $this->loadSchedules();
         $this->loadSettings();
+
+        $status = Setting::where('key', 'light_status')->value('value');
+        $this->luzEncendida = ($status == 1);
+    }
+
+    public function toggleLight()
+    {
+        // Invertimos el valor actual
+        $this->luzEncendida = !$this->luzEncendida;
+        
+        // Guardamos en la base de datos (Tabla settings)
+        Setting::updateOrCreate(
+            ['key' => 'light_status'],
+            ['value' => $this->luzEncendida ? 1 : 0]
+        );
+        
+        // Opcional: Crear un log si quieres registrar cuando se prenden las luces
     }
 
     public function loadSettings()

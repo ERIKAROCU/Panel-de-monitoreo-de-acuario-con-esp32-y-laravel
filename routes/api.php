@@ -9,3 +9,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/lectura', [LecturaController::class, 'store']);
+
+Route::post('/log-sensors', [App\Http\Controllers\AcuarioController::class, 'storeSensorLog']);

@@ -10,6 +10,7 @@ use App\Models\Setting;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Log;
+use App\Models\Prueba;
 
 class AcuarioController extends Controller
 {
@@ -32,18 +33,25 @@ class AcuarioController extends Controller
 
         $angleOpen = Setting::where('key', 'feeder_angle_open')->value('value') ?? 65;
         $angleClose = Setting::where('key', 'feeder_angle_close')->value('value') ?? 0;
+
+        $lightStatus = Setting::where('key', 'light_status')->value('value') ?? 0;
                           
+        $response = [
+            'light_status' => (int)$lightStatus, // El ESP32 leerá esto siempre
+            'conf_open'    => (int)$angleOpen,
+            'conf_close'   => (int)$angleClose
+        ];
+
         if ($command) {
             $command->is_pending = false;
             $command->save();
-            return response()->json([
-                'command' => $command->command_value,
-                'conf_open' => (int)$angleOpen,   // Enviamos config
-                'conf_close' => (int)$angleClose  // Enviamos config
-            ]);
+            
+            $response['command'] = $command->command_value; // Ejemplo: "3" porciones
+        } else {
+            $response['command'] = "NONE";
         }
 
-        return response()->json(['command' => 'NONE']);
+        return response()->json($response);
     }
 
     private function checkAndTriggerSchedule($currentTime, $now)
@@ -91,5 +99,29 @@ class AcuarioController extends Controller
         } else {
              Log::info("FALLO: No hay coincidencia para {$currentTime} en {$currentDay}.");
         }
+    }
+
+
+    public function storeSensorLog(Request $request)
+    {
+        // Validamos que lleguen los datos
+        $validated = $request->validate([
+            'humedad'       => 'required|numeric',
+            'temp_ambiente' => 'required|numeric',
+            'temp_agua'     => 'required|numeric',
+            'tds'           => 'nullable|numeric',
+            'luz'           => 'required|boolean', // 0 o 1
+        ]);
+
+        // Guardamos en la Base de Datos
+        Prueba::create([
+            'humedad'       => $validated['humedad'],
+            'temp_ambiente' => $validated['temp_ambiente'], 
+            'temp_agua'     => $validated['temp_agua'],    
+            'tds'           => $validated['tds'] ?? 0,
+            'luz'           => $validated['luz'],
+        ]);
+
+        return response()->json(['status' => 'Saved'], 201);
     }
 }
