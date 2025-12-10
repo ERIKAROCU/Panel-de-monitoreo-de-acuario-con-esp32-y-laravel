@@ -39,6 +39,12 @@
                         </svg>
                     </button>
                 </div>
+                {{-- AÑADIDO: Imagen del Pez/Alimentador --}}
+<div class="w-full flex justify-center mb-6">
+    <img src="{{ asset('images/nemo.gif') }}" 
+        alt="Animación Alimentador" 
+        class="h-50 w-auto mx-auto hover:scale-105 transition-transform duration-500 ease-in-out rounded-lg shadow-md">
+</div>
 
                 {{-- ACCIONES DE CONTROL (BOTONES GRANDES) --}}
                 <div class="space-y-6 flex-grow flex flex-col justify-center">

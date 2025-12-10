@@ -1,22 +1,18 @@
-{{-- El polling ahora se define aquí y energiza a todos los hijos --}}
-<div class="bg-gray-100 dark:bg-gray-900 py-12" >
+{{-- 👇 AQUÍ ESTÁ EL CAMBIO: Usamos bg-transparent --}}
+<div class="bg-transparent py-12" >
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 
         {{-- 1. Verificamos si hay datos --}}
         @if ($lecturaActual)
 
             {{-- 2. Mostramos el componente hijo basado en la pestaña activa --}}
-            {{-- Usamos wire:key para asegurar que Livewire los identifique correctamente --}}
-
             @if ($activeTab == 'dashboard')
-                {{-- Pasamos la lectura actual al componente de estadísticas --}}
                 <livewire:dashboard.stats :lectura="$lecturaActual" wire:key="dashboard-stats" />
 
             @elseif ($activeTab == 'control')
                 <livewire:control.actuadores wire:key="control-actuadores" />
             
             @elseif ($activeTab == 'charts')
-                {{-- Este componente se carga 'lazy' para no consultar la BD innecesariamente --}}
                 <livewire:control.graficos wire:key="control-graficos" />
 
             @elseif ($activeTab == 'historial')
@@ -25,6 +21,7 @@
 
         {{-- 3. Mensaje si no hay NINGÚN dato en la BD --}}
         @else
+            {{-- Nota: Esta caja de "No hay datos" seguirá siendo blanca. Si quieres que también sea transparente, cambia bg-white por bg-white/80 o bg-transparent aquí abajo --}}
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-md sm:rounded-lg">
                 <div class="p-12 text-gray-900 dark:text-gray-100 text-center">
                     <svg class="h-16 w-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">

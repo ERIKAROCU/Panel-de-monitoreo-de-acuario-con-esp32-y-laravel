@@ -18,7 +18,7 @@ export default defineConfig({
         host: '0.0.0.0', // <--- CAMBIA ESTO (Es más seguro y flexible)
         port: 5173,
         hmr: {
-            host: '192.168.31.210' // <--- AQUÍ SÍ pon tu IP fija para que el celular sepa dónde buscar los estilos
+            host: '192.168.43.172' // <--- AQUÍ SÍ pon tu IP fija para que el celular sepa dónde buscar los estilos
         }
     }
 });

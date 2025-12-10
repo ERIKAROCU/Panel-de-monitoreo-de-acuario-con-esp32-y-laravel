@@ -4,9 +4,10 @@
     @actualizar-graficos.window="drawStatCharts($event.detail.lectura)"
 >
 
-    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex flex-col items-center">
-        <h2 class="text-md font-semibold text-gray-800 dark:text-gray-200">Dashboard</h2>
-    </div>
+  {{-- 🔹 Encabezado principal --}}
+<div class="relative z-10 bg-white dark:bg-gray-800 rounded-lg shadow-md p-4 flex flex-col items-center">
+    <h2 class="text-md font-semibold text-gray-800 dark:text-gray-200">Dashboard</h2>
+</div>
     
     {{-- =============== NUEVA FILA DE GRÁFICOS INTERPRETATIVOS =============== --}}
     <div wire:ignore class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6 mt-10 mb-6">
