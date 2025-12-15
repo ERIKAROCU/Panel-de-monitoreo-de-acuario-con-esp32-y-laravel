@@ -32,18 +32,22 @@ class AcuarioController extends Controller
         $angleOpen = Setting::where('key', 'feeder_angle_open')->value('value') ?? 65;
         $angleClose = Setting::where('key', 'feeder_angle_close')->value('value') ?? 0;
         $lightStatus = Setting::where('key', 'light_status')->value('value') ?? 0;
+
+        $sensorInterval = Setting::where('key', 'sensor_interval')->value('value') ?? 60; 
+        $sensorPaused = Setting::where('key', 'sensor_paused')->value('value') ?? 0;
                           
         $response = [
             'light_status' => (int)$lightStatus, // El ESP32 leerá esto siempre
             'conf_open'    => (int)$angleOpen,
-            'conf_close'   => (int)$angleClose
+            'conf_close'   => (int)$angleClose,
+            'sensor_interval' => (int)$sensorInterval,
+            'sensor_paused'   => (int)$sensorPaused
         ];
 
         if ($command) {
             $command->is_pending = false;
             $command->save();
-            
-            $response['command'] = $command->command_value; // Ejemplo: "3" porciones
+            $response['command'] = $command->command_value;
         } else {
             $response['command'] = "NONE";
         }
@@ -101,6 +105,12 @@ class AcuarioController extends Controller
 
     public function storeSensorLog(Request $request)
     {
+        $isPaused = Setting::where('key', 'sensor_paused')->value('value') ?? 0;
+        
+        if ($isPaused == 1) {
+             return response()->json(['status' => 'Ignored (Paused)'], 200);
+        }
+
         // Validamos que lleguen los datos
         $validated = $request->validate([
             'humedad'       => 'required|numeric',

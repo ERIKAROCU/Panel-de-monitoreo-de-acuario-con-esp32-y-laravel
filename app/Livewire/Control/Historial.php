@@ -4,25 +4,65 @@ namespace App\Livewire\Control;
 
 use Livewire\Component;
 use App\Models\Prueba;
+use App\Models\Setting;
 use Livewire\WithPagination;
-
-// --- AÑADIR ESTAS DOS LÍNEAS ---
 use App\Exports\HistorialExport;
 use Maatwebsite\Excel\Facades\Excel;
-// --- FIN ---
 
 class Historial extends Component
 {
     use WithPagination;
 
-    // Propiedades para los filtros
     public $filtroFechaDesde;
     public $filtroFechaHasta;
-    public $filtroLuz = ''; // '' significa "Todos"
+    public $filtroLuz = ''; 
+    public $showConfigModal = false;
+    public $sensorInterval = 60;
+    public $sensorPaused = false;
 
-    /**
-    * Resetea la paginación si cambia un filtro
-    */
+    public function mount()
+    {
+        $this->loadSettings();
+    }
+
+    public function loadSettings()
+    {
+        $this->sensorInterval = Setting::where('key', 'sensor_interval')->value('value') ?? 60;
+        $pausedValue = Setting::where('key', 'sensor_paused')->value('value') ?? 0;
+        $this->sensorPaused = ($pausedValue == 1);
+    }
+
+    public function saveSettings()
+    {
+        $this->validate([
+            'sensorInterval' => 'required|integer|min:5|max:3600', // Mínimo 5 seg, Máx 1 hora
+            'sensorPaused'   => 'boolean'
+        ]);
+
+        // Guardar Intervalo
+        Setting::updateOrCreate(
+            ['key' => 'sensor_interval'],
+            ['value' => $this->sensorInterval]
+        );
+
+        // Guardar Estado de Pausa (1 = Pausado, 0 = Activo)
+        Setting::updateOrCreate(
+            ['key' => 'sensor_paused'],
+            ['value' => $this->sensorPaused ? 1 : 0]
+        );
+
+        $this->showConfigModal = false;
+        
+        // Mensaje flash opcional
+        session()->flash('message_config', '¡Configuración de sensores actualizada!');
+    }
+
+    public function openConfigModal()
+    {
+        $this->loadSettings();
+        $this->showConfigModal = true;
+    }
+
     public function updating($property)
     {
         if (in_array($property, ['filtroFechaDesde', 'filtroFechaHasta', 'filtroLuz'])) {
@@ -62,9 +102,6 @@ class Historial extends Component
     public function exportarExcel()
     {
         $fileName = 'historial_sensores_' . now()->format('Y-m-d_His') . '.xlsx';
-
-        // Pasamos los filtros actuales al constructor del Export
-        // Laravel Excel se encargará de la descarga
         return Excel::download(
             new HistorialExport(
                 $this->filtroFechaDesde, 

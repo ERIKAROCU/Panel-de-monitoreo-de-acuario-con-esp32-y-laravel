@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\LecturaController; 
+use App\Http\Controllers\AcuarioController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -10,4 +11,4 @@ Route::get('/user', function (Request $request) {
 
 Route::get('/lectura', [LecturaController::class, 'store']);
 
-Route::post('/log-sensors', [App\Http\Controllers\AcuarioController::class, 'storeSensorLog']);
+Route::post('/log-sensors', [AcuarioController::class, 'storeSensorLog']);
