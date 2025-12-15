@@ -17,9 +17,7 @@ class AcuarioController extends Controller
     public function checkCommands()
     {
         $now = Carbon::now('America/Lima'); 
-
         $currentMinute = $now->format('H:i');
-        
         $lockName = 'acuario_schedule_check_' . $currentMinute;
         $lock = Cache::lock($lockName, 60);
 
@@ -33,7 +31,6 @@ class AcuarioController extends Controller
 
         $angleOpen = Setting::where('key', 'feeder_angle_open')->value('value') ?? 65;
         $angleClose = Setting::where('key', 'feeder_angle_close')->value('value') ?? 0;
-
         $lightStatus = Setting::where('key', 'light_status')->value('value') ?? 0;
                           
         $response = [

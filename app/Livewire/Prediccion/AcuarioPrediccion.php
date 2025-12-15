@@ -10,7 +10,7 @@ class AcuarioPrediccion extends Component
 {
     // Variables de Datos
     public $proyecciones = null;       
-    public $ultimoRegistro = null;     // <--- NUEVA: Para mostrar el estado actual
+    public $ultimoRegistro = null; 
     public $ultimaActualizacion = null; 
     public $cargando = false;          
     

@@ -1,0 +1,64 @@
+version: '3.8' # <--- Docker lo ignorará, pero déjalo por ahora.
+
+services:
+  # 1. SERVICIO DE LA APLICACIÓN (PHP/Laravel)
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: laravel-livewire-app
+    volumes:
+      - .:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      DB_HOST: mysql_db
+    depends_on: # <--- ¡Aquí está la corrección!
+      - mysql_db
+      # - webserver <--- ELIMINAR ESTA LÍNEA
+      
+  # 2. SERVICIO DEL SERVIDOR WEB (Nginx)
+  webserver:
+    image: nginx:stable-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/html:ro
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app # <--- Esto es correcto: Nginx depende de PHP para funcionar
+
+  # 3. SERVICIO DE LA BASE DE DATOS (MySQL)
+  mysql_db:
+# ... (el resto del servicio de la DB queda igual)
+    image: mysql:8.0
+    container_name: mysql_db
+    environment:
+      # **¡USA ESTOS VALORES EN TU .ENV!**
+      MYSQL_ROOT_PASSWORD: supersecretrootpassword
+      MYSQL_DATABASE: laravel_db
+      MYSQL_USER: erik
+      MYSQL_PASSWORD: 12345678
+    ports:
+      - "3307:3306" # Mapea para poder conectarte con MySQL Workbench (opcional)
+    volumes:
+      - dbdata:/var/lib/mysql # Persiste los datos (los guarda aunque el contenedor se detenga)
+    restart: always
+
+  # 4. SERVICIO DE PREDICCIÓN CON PYTHON
+  python_worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.python # Usar el Dockerfile específico
+    image: python-ai-worker
+    # No exponemos puertos, solo se comunica con la app PHP internamente
+    volumes:
+      # Montar los scripts y datos para que los cambios se vean al instante
+      - ./storage/app/python:/usr/src/app
+    # Asegurarse de que se levante con la aplicación
+    depends_on:
+      - app 
+    restart: always
+
+# Volúmenes para persistir la data de MySQL
+volumes:
+  dbdata:

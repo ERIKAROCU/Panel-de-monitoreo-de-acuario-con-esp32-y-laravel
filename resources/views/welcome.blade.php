@@ -3,89 +3,125 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-    {{-- Título de la aplicación --}}
-    <title>{{ config('app.name', 'Laravel') }}</title>
 
-    {{-- Fonts y Vite (Tailwind) --}}
+    <title>{{ config('app.name', 'AcuarioSmart') }}</title>
+
+    {{-- Fonts y Vite --}}
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
-
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    {{-- ✨ ESTILOS DEL VIDEO DE FONDO --}}
+    {{-- Video background --}}
     <style>
-        /* 🔹 Asegura que el video cubra toda la pantalla */
         video.bg-video {
             position: fixed;
-            top: 0;
-            left: 0;
+            inset: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover; /* similar a background-size: cover */
-            z-index: -1; /* lo pone detrás del contenido */
+            object-fit: cover;
+            z-index: -1;
         }
     </style>
 </head>
 
-{{-- MODIFICADO: Se mantiene text-white para que el texto de navegación sea visible --}}
 <body class="antialiased font-sans text-white">
-    
-    {{-- 🎬 VIDEO DE FONDO MANTENIDO --}}
+
+    {{-- 🎬 VIDEO --}}
     <video class="bg-video" autoplay muted loop playsinline>
         <source src="{{ asset('videos/fondo.mp4') }}" type="video/mp4">
     </video>
 
-    {{-- 📦 Contenedor principal centrado, sin estilos de fondo estáticos --}}
-    <div class="relative min-h-screen flex flex-col items-center justify-center">
-        
-        <div class="relative w-full max-w-2xl px-6 lg:max-w-7xl">
+    {{-- Overlay suave para legibilidad --}}
+    <div class="fixed inset-0 bg-black/50 z-[-1]"></div>
+
+    <div class="relative min-h-screen flex flex-col">
+
+        {{-- 🧭 HEADER --}}
+        <header class="w-full px-6 py-6 flex items-center justify-between max-w-7xl mx-auto">
             
-            {{-- 🧭 NAVEGACIÓN DE LOGIN/REGISTER (MANTENIDA) --}}
-            <header class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
-                
-                {{-- Espacio para el logo (vacío) --}}
-                <div class="flex lg:justify-center lg:col-start-2">
-                    {{-- Puedes colocar aquí un <img> o <svg> de tu propio logo si lo deseas --}}
-                </div>
+            {{-- Logo / Nombre --}}
+            <div class="text-lg font-extrabold tracking-wide">
+                {{ config('app.name', 'AcuarioSmart') }}
+            </div>
 
-                @if (Route::has('login'))
-                    {{-- Este div contiene los botones de Log in / Register --}}
-                    <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10 lg:col-start-3">
-                        @auth
-                            <a href="{{ url('/dashboard') }}"
-                                class="font-semibold text-gray-200 hover:text-white">
-                                Dashboard
+            {{-- Navegación --}}
+            @if (Route::has('login'))
+                <div class="flex items-center gap-3">
+                    @auth
+                        <a href="{{ url('/dashboard') }}"
+                           class="px-5 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20
+                                  hover:bg-white/20 transition font-semibold text-sm">
+                            Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}"
+                           class="px-4 py-2 rounded-full bg-white/10 backdrop-blur-md border border-white/20
+                                  hover:bg-white/20 transition text-sm font-semibold">
+                            Log in
+                        </a>
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}"
+                               class="hidden sm:inline-block px-4 py-2 rounded-full bg-indigo-600
+                                      hover:bg-indigo-500 transition text-sm font-semibold shadow-lg">
+                                Register
                             </a>
-                        @else
-                            <a href="{{ route('login') }}"
-                                class="font-semibold text-gray-200 hover:text-white">
-                                Log in
-                            </a>
-
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}"
-                                    class="ms-4 font-semibold text-gray-200 hover:text-white">
-                                    Register
-                                </a>
-                            @endif
-                        @endauth
-                    </div>
-                @endif
-            </header>
-
-            {{-- ZONA DE CONTENIDO CENTRAL (ELIMINADA) --}}
-            <main class="mt-6">
-                {{-- Aquí puedes añadir tu propio contenido minimalista --}}
-                <div class="text-center pt-20">
-                    <h1 class="text-6xl font-extrabold tracking-tight">¡Bienvenid@!</h1>
-                    <p class="mt-4 text-xl text-white/80">Comienza a navegar por nuestro proyecto.</p>
+                        @endif
+                    @endauth
                 </div>
-            </main>
+            @endif
+        </header>
 
-            {{-- FOOTER (ELIMINADO) --}}
-            
-        </div>
+        {{-- 🌟 CONTENIDO CENTRAL --}}
+        <main class="flex-1 flex items-center justify-center px-6">
+            <div class="text-center max-w-2xl">
+
+                <h3 class="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white/80">
+                    Bienvenido a
+                </h3>
+
+                <h1 class="mt-2 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight">
+                    AcuarioSmart
+                </h1>
+
+
+                <p class="mt-5 text-base sm:text-lg text-white/80">
+                    Sistema de predicción inteligente para monitoreo de variables ambientales en tiempo real.
+                </p>
+
+                {{-- CTA --}}
+                <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
+                    @auth
+                        <a href="{{ url('/dashboard') }}"
+                           class="w-full sm:w-auto px-8 py-3 rounded-xl bg-indigo-600
+                                  hover:bg-indigo-500 transition font-bold shadow-xl">
+                            Ir al Dashboard
+                        </a>
+                    @else
+                        <a href="{{ route('login') }}"
+                           class="w-full sm:w-auto px-8 py-3 rounded-xl bg-indigo-600
+                                  hover:bg-indigo-500 transition font-bold shadow-xl">
+                            Iniciar sesión
+                        </a>
+
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}"
+                               class="w-full sm:w-auto px-8 py-3 rounded-xl bg-white/10
+                                      backdrop-blur-md border border-white/20
+                                      hover:bg-white/20 transition font-semibold">
+                                Crear cuenta
+                            </a>
+                        @endif
+                    @endauth
+                </div>
+            </div>
+        </main>
+
+        {{-- FOOTER mínimo --}}
+        <footer class="text-center text-xs text-white/50 pb-6">
+            © {{ date('Y') }} {{ config('app.name') }} · Laravel + Livewire
+        </footer>
     </div>
+
 </body>
 </html>

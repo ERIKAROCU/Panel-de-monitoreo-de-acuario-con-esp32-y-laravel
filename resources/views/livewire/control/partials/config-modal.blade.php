@@ -58,35 +58,87 @@
                 {{-- Slider Ángulo Abierto --}}
                 <div>
                     <div class="flex justify-between mb-2 items-center">
-                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Posición Abierto</label>
-                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-indigo-100 bg-indigo-600 rounded">
-                            {{ $angleOpen }}°
-                        </span>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Posición Abierto
+                        </label>
+
+                        <div class="flex items-center gap-2">
+                            <input
+                                type="number"
+                                min="20"
+                                max="180"
+                                wire:model.live.debounce.300ms="angleOpen"
+                                class="w-20 px-2 py-1 text-xs text-center border rounded-md
+                                    border-gray-300 dark:border-gray-600
+                                    bg-white dark:bg-gray-800
+                                    text-gray-700 dark:text-gray-200
+                                    focus:ring-2 focus:ring-indigo-500"
+                            />
+                            <span class="text-xs text-gray-500">°</span>
+                        </div>
                     </div>
-                    <input type="range" wire:model.live="angleOpen" min="20" max="180" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-indigo-600">
+
+                    <input
+                        type="range"
+                        min="20"
+                        max="180"
+                        wire:model.live="angleOpen"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer
+                            dark:bg-gray-700 accent-indigo-600"
+                    >
+
                     <div class="flex justify-between text-xs text-gray-400 mt-1">
                         <span>20°</span>
                         <span>180°</span>
                     </div>
-                    @error('angleOpen') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
+
+                    @error('angleOpen')
+                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                    @enderror
                 </div>
+
 
                 {{-- Slider Ángulo Cerrado --}}
                 <div>
                     <div class="flex justify-between mb-2 items-center">
-                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">Posición Cerrado</label>
-                        <span class="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-gray-100 bg-gray-600 rounded">
-                            {{ $angleClose }}°
-                        </span>
+                        <label class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Posición Cerrado
+                        </label>
+
+                        <div class="flex items-center gap-2">
+                            <input
+                                type="number"
+                                min="0"
+                                max="100"
+                                wire:model.live.debounce.300ms="angleClose"
+                                class="w-20 px-2 py-1 text-xs text-center border rounded-md
+                                    border-gray-300 dark:border-gray-600
+                                    bg-white dark:bg-gray-800
+                                    text-gray-700 dark:text-gray-200
+                                    focus:ring-2 focus:ring-gray-500"
+                            />
+                            <span class="text-xs text-gray-500">°</span>
+                        </div>
                     </div>
-                    <input type="range" wire:model.live="angleClose" min="0" max="100" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 accent-gray-500">
+
+                    <input
+                        type="range"
+                        min="0"
+                        max="100"
+                        wire:model.live="angleClose"
+                        class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer
+                            dark:bg-gray-700 accent-gray-500"
+                    >
+
                     <div class="flex justify-between text-xs text-gray-400 mt-1">
                         <span>0°</span>
                         <span>100°</span>
                     </div>
-                    @error('angleClose') <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span> @enderror
-                </div>
 
+                    @error('angleClose')
+                        <span class="text-red-500 text-sm mt-1 block">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
         </div>
 

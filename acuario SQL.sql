@@ -2,7 +2,7 @@ use acuario;
 
 select*from prueba order by id desc;
 
--- DELETE FROM prueba WHERE id BETWEEN 502 AND 511;
+-- DELETE FROM prueba WHERE id BETWEEN 578 AND 688;
 
 
 CREATE TABLE prueba (

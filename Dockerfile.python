@@ -1,0 +1,16 @@
+# Dockerfile.python (SOLUCIÓN FINAL DE RUTA)
+FROM python:3.11-slim
+
+# Crea el directorio de trabajo (donde correrán los scripts)
+WORKDIR /usr/src/app
+
+# Instala las librerías esenciales para tu modelo
+RUN pip install pandas scikit-learn joblib numpy
+
+# **CORRECCIÓN DE RUTA:**
+# Copia el contenido de la carpeta 'storage/app/python' 
+# a la carpeta de trabajo del contenedor '/usr/src/app/'
+COPY ./storage/app/python /usr/src/app/
+
+# Opcional: Comando por defecto (mantener el contenedor corriendo)
+CMD ["sleep", "infinity"]
